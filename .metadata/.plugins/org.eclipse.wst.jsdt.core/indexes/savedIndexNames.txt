@@ -1,0 +1,7 @@
+INDEX VERSION 1.4+/Users/yangli/braid/.metadata/.plugins/org.eclipse.wst.jsdt.core/indexes
+2485498112.index
+4260669139.index
+4238435111.index
+2528996530.index
+1621345205.index
+4139220266.index

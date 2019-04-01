@@ -1,0 +1,13 @@
+!SESSION 2019-04-01 13:01:33.443 -----------------------------------------------
+eclipse.buildId=4.7.3.M20180330-0640
+java.version=9
+java.vendor=Oracle Corporation
+BootLoader constants: OS=macosx, ARCH=x86_64, WS=cocoa, NL=en_US
+Framework arguments:  -product org.eclipse.epp.package.jee.product -product org.eclipse.epp.package.jee.product -keyring /Users/yangli/.eclipse_keyring
+Command-line arguments:  -os macosx -ws cocoa -arch x86_64 -product org.eclipse.epp.package.jee.product -data /Users/yangli/braid -product org.eclipse.epp.package.jee.product -keyring /Users/yangli/.eclipse_keyring
+
+!ENTRY org.eclipse.wst.server.discovery 1 0 2019-04-01 13:02:36.654
+!MESSAGE already installed: org.eclipse.jst.server.generic.jonas4
+
+!ENTRY org.eclipse.wst.server.discovery 1 0 2019-04-01 13:03:10.936
+!MESSAGE already installed: org.eclipse.jst.server.generic.jonas4
