@@ -20,7 +20,7 @@ import external.WeatherItem;
  */
 @WebServlet("/Load")
 public class LoadWeatherData extends HttpServlet {
-	private static final String secret_key = "20d59fb9ec8ea1457f56c337c7998d62";
+	private static final String secret_key = "your_secret_key";
 	private static final long serialVersionUID = 1L;
        
     /**
