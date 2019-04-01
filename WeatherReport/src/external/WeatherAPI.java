@@ -7,13 +7,14 @@ import java.net.URL;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+
 public class WeatherAPI {
 	private static final String API_HOST = "http://wx.wearebraid.com";
 	private static final String PATH_STATION = "/stations";
 	private static final String API_KEY = "your_secret_key";
 	
-	// query API from braid 
-	private JSONArray queryAPI(String url) {
+	// query jsonArray from braid 
+	private JSONArray queryJSONArray(String url) {
 		try {
 			// Open a HTTP connection between Java application and braid url
 			HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
@@ -39,19 +40,103 @@ public class WeatherAPI {
 		return null;
 	}	
 	
+	private JSONObject queryJSONObject(String url) {
+		try {
+			// Open a HTTP connection between Java application and braid url
+			HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+			// Set requrest method to GET
+			connection.setRequestMethod("GET");
+			// response body is saved in InputStream of connection.
+			int responseCode = connection.getResponseCode();
+			System.out.println("\nSending 'GET' request to URL : "+ url);
+			System.out.println("Response Code : " + responseCode);
+			//read response body to get events data
+						BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+						String inputLine;
+						StringBuilder response = new StringBuilder();
+						while ((inputLine = in.readLine()) != null) {
+							response.append(inputLine);
+						}
+						in.close();
+						JSONObject jsonObj = new JSONObject(response.toString());
+						return jsonObj;
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+		return null;
+	}	
+	
+	
+	
+	
+	public String[] getStations() {
+		String url = API_HOST + PATH_STATION;
+		JSONArray jsonArray = queryJSONArray(url);
+		try {
+			String[] stations = new String[jsonArray.length()];
+		    for (int i = 0; i < jsonArray.length(); i++) {
+		        JSONObject station = jsonArray.getJSONObject(i);
+		        String st = (String) station.get("Station");
+		        stations[i] = st;
+		    }
+		    return stations;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public WeatherItem[] getWeatherItems() {
+		String[] stations = getStations();
+		try {
+			WeatherItem[] weatherItems = new WeatherItem[stations.length];
+			for (int i = 0; i < stations.length; i++) {
+				String url = API_HOST + PATH_STATION + "/" + stations[i];
+				JSONObject weather = queryJSONObject(url);
+				
+				JSONObject tempObj = (JSONObject) weather.get("temperature");
+				String temperature = (String)tempObj.get("value").toString();
+				
+				JSONObject visibObj = (JSONObject) weather.get("visibility");
+				String visibility = (String) visibObj.get("value").toString();
+				
+	
+				JSONObject windDirObj = (JSONObject) weather.get("wind_direction");
+				String windDirection = (String) windDirObj.get("value").toString();
+			
+				JSONObject windSpeedObj = (JSONObject) weather.get("wind_speed");
+				String windSpeed = (String) windSpeedObj.get("value").toString();
+				
+				JSONArray cloudList = (JSONArray)weather.get("clouds");
+				String cloudBroken;
+				String cloudOvercast;
+				if (cloudList == null || cloudList.length() == 0) {
+					cloudBroken = "";
+					cloudOvercast = "";
+				}else {
+				cloudBroken = (String) cloudList.get(0).toString();
+				cloudOvercast = (String) cloudList.get(0).toString();
+				}
+				
+				WeatherItem item = new WeatherItem(stations[i],cloudBroken, cloudOvercast, windSpeed, windDirection, visibility, temperature);
+				weatherItems[i] = item;
+			}
+			return weatherItems;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	
+	
+	
 	
 	public static void main(String[] args) {
 		WeatherAPI test = new WeatherAPI();
-		String url = API_HOST + PATH_STATION;
-		JSONArray jsonArray = test.queryAPI(url);
-	
-		try {
-		    for (int i = 0; i < jsonArray.length(); i++) {
-		        JSONObject event = jsonArray.getJSONObject(i);
-		        System.out.println(event);
-		    }
-		} catch (Exception e) {
-			e.printStackTrace();
+		WeatherItem[] weatherItems = test.getWeatherItems();
+		for (WeatherItem item : weatherItems) {
+			System.out.println(item);
 		}
 	}
 }

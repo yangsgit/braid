@@ -26,3 +26,22 @@ Command-line arguments:  -os macosx -ws cocoa -arch x86_64 -product org.eclipse.
 
 !ENTRY org.eclipse.jface.text 2 0 2019-04-01 13:35:39.054
 !MESSAGE Duplicate template id: 'org.eclipse.wst.xslt.templates.xpath.round'
+!SESSION 2019-04-01 15:29:18.173 -----------------------------------------------
+eclipse.buildId=4.7.3.M20180330-0640
+java.version=9
+java.vendor=Oracle Corporation
+BootLoader constants: OS=macosx, ARCH=x86_64, WS=cocoa, NL=en_US
+Framework arguments:  -product org.eclipse.epp.package.jee.product -keyring /Users/yangli/.eclipse_keyring
+Command-line arguments:  -os macosx -ws cocoa -arch x86_64 -product org.eclipse.epp.package.jee.product -keyring /Users/yangli/.eclipse_keyring
+
+!ENTRY org.eclipse.jface.text 2 0 2019-04-01 15:33:23.696
+!MESSAGE Duplicate template id: 'org.eclipse.wst.xslt.templates.xpath.number'
+
+!ENTRY org.eclipse.jface.text 2 0 2019-04-01 15:33:23.703
+!MESSAGE Duplicate template id: 'org.eclipse.wst.xslt.templates.xpath.round'
+
+!ENTRY org.eclipse.jface.text 2 0 2019-04-01 15:35:18.068
+!MESSAGE Duplicate template id: 'org.eclipse.wst.xslt.templates.xpath.number'
+
+!ENTRY org.eclipse.jface.text 2 0 2019-04-01 15:35:18.069
+!MESSAGE Duplicate template id: 'org.eclipse.wst.xslt.templates.xpath.round'

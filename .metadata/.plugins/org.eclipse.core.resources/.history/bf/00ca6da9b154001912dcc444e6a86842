@@ -1,0 +1,15 @@
+package entity;
+
+public class WeatherItem {
+	public String cloud;
+	public String wind;
+	public String visibility;
+	public String temperature;
+	
+	public WeatherItem(String cloud, String wind, String visibility, String temperature) {
+		this.cloud = cloud;
+		this.wind = wind;
+		this.visibility = visibility;
+		this.temperature = temperature;
+	}
+}
