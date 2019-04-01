@@ -73,8 +73,10 @@ public class WeatherAPI {
 			String[] stations = new String[jsonArray.length()];
 		    for (int i = 0; i < jsonArray.length(); i++) {
 		        JSONObject station = jsonArray.getJSONObject(i);
-		        String st = (String) station.get("Station");
-		        stations[i] = st;
+		        String stateId = (String) station.get("Station");
+		        String city = (String) station.get("City");
+		        String state = (String) station.get("State");
+		        stations[i] = stateId + " " + city + " " + state;
 		    }
 		    return stations;
 		} catch (Exception e) {
@@ -88,7 +90,8 @@ public class WeatherAPI {
 		try {
 			WeatherItem[] weatherItems = new WeatherItem[stations.length];
 			for (int i = 0; i < stations.length; i++) {
-				String url = API_HOST + PATH_STATION + "/" + stations[i];
+				String[] stationArray = stations[i].split(" ");
+				String url = API_HOST + PATH_STATION + "/" + stationArray[0];
 				JSONObject weather = queryJSONObject(url);
 				
 				JSONObject tempObj = (JSONObject) weather.get("temperature");
@@ -122,7 +125,7 @@ public class WeatherAPI {
 					}
 				}
 				
-				WeatherItem item = new WeatherItem(stations[i], cloudBroken, cloudOvercast, windSpeed, windDirection, visibility, temperature);
+				WeatherItem item = new WeatherItem(stationArray[0], stationArray[1], stationArray[2] , cloudBroken, cloudOvercast, windSpeed, windDirection, visibility, temperature);
 				weatherItems[i] = item;
 			}
 			return weatherItems;

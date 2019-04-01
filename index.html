@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Airport Weather</title>
+</head>
+<body>
+<table border="3">
+    <thead>
+    <tr>
+        <th>Station</th>
+        <th>City</th>
+        <th>State</th>
+        <th>Cloud cover</th>
+        <th>Wind Speed and Direction</th>
+        <th>Visibility</th>
+        <th>Temperature</th>
+    </tr>
+    </thead>
+    <tbody id="tableWeather"></tbody>
+</table>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script type="text/javascript">
+
+    var station;
+
+    $(function () {
+        // $.ajax({
+        //     type: 'GET',
+        //     url: 'http://localhost:8080/WeatherReport/Load',
+        //     success: function (data) {
+        //         station = data
+        //
+        //         var tbody = document.getElementById('tableWeather');
+        //         for (var i = 0; i < station.length; i++) {
+        //             var row = getDataRow(station[i]);
+        //             tbody.appendChild(row);
+        //         }
+        //     }
+        // })
+
+        $.ajax({
+            type: 'POST',
+            url: 'http://localhost:8080/WeatherReport/Load',
+            data: {secret_key:'your_secret_key'},
+            success: function (data) {
+                station = data
+
+                var tbody = document.getElementById('tableWeather');
+                for (var i = 0; i < station.length; i++) {
+                    var row = getDataRow(station[i]);
+                    tbody.appendChild(row);
+                }
+            }
+        })
+    });
+
+    function getDataRow(r) {
+        var row = document.createElement("tr");
+
+        var stationCell = document.createElement("td");
+        stationCell.innerHTML = r.station;
+        row.appendChild(stationCell);
+
+        var cityCell = document.createElement("td");
+        cityCell.innerHTML = r.city;
+        row.appendChild(cityCell);
+
+        var stateCell = document.createElement("td");
+        stateCell.innerHTML = r.state;
+        row.appendChild(stateCell);
+
+        var cloudCell = document.createElement("td");
+        cloudCell.innerHTML = r.cloud;
+        row.appendChild(cloudCell);
+
+        var visibilityCell = document.createElement("td");
+        visibilityCell.innerHTML = r.visibility;
+        row.appendChild(visibilityCell);
+
+        var temperatureCell = document.createElement("td");
+        temperatureCell.innerHTML = r.temperature;
+        row.appendChild(temperatureCell);
+
+        var windCell = document.createElement("td");
+        windCell.innerHTML = r.wind;
+        row.appendChild(windCell);
+
+        return row;
+    }
+
+</script>
+
+
+</body>
+</html>

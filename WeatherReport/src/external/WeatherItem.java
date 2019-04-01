@@ -5,6 +5,8 @@ import org.json.JSONObject;
 
 public class WeatherItem {
 	public String stationID;
+	public String city;
+	public String state;
 	public String cloudBroken;
 	public String cloudOvercast;
 	public String windSpeed;
@@ -12,8 +14,10 @@ public class WeatherItem {
 	public String visibility;
 	public String temperature;
 	
-	public WeatherItem(String stationID, String cloudBroken, String cloudOvercast, String windSpeed, String windDirection, String visibility, String temperature) {
+	public WeatherItem(String stationID, String city, String state, String cloudBroken, String cloudOvercast, String windSpeed, String windDirection, String visibility, String temperature) {
 		this.stationID = stationID;
+		this.city = city;
+		this.state = state;
 		this.cloudBroken = cloudBroken;
 		this.cloudOvercast = cloudOvercast;
 		this.windSpeed = windSpeed;
@@ -22,10 +26,12 @@ public class WeatherItem {
 		this.temperature = temperature;
 	}
 	
-	
 	public JSONObject toJSONObject() {
 		JSONObject obj = new JSONObject();
 		try {
+			obj.put("station", this.stationID);
+			obj.put("city", this.city);
+			obj.put("state", this.state);
 			obj.put("cloud", "Broken: "+ this.cloudBroken + " " + "Overcast: "+ this.cloudOvercast);
 			obj.put("wind", "Direction: " + this.windDirection +" " + "speed: " + this.windSpeed);
 			obj.put("visibility", this.visibility);

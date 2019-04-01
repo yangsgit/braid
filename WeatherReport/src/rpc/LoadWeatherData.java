@@ -1,7 +1,6 @@
 package rpc;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -9,11 +8,19 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+
+import external.WeatherAPI;
+import external.WeatherItem;
+ 
 /**
  * Servlet implementation class LoadWeatherData
  */
-@WebServlet("/LoadWeatherData")
+@WebServlet("/Load")
 public class LoadWeatherData extends HttpServlet {
+	private static final String secret_key = "your_secret_key";
 	private static final long serialVersionUID = 1L;
        
     /**
@@ -28,19 +35,14 @@ public class LoadWeatherData extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-//		response.getWriter().append("Served at: ").append(request.getContextPath());
-		//Create a PrintWriter from response such that we can add data to response.
-		PrintWriter out = response.getWriter();
-		if (request.getParameter("username") != null) {
-			//Get the username sent from the client
-			String username = request.getParameter("username");
-            //In the output stream, add something to response body. 
-			out.print("Hello " + username);
+		JSONArray array = new JSONArray();
+		WeatherAPI test = new WeatherAPI();
+		WeatherItem[] weatherItems = test.getWeatherItems();
+		for (WeatherItem item : weatherItems) {
+			JSONObject jsonObj = item.toJSONObject();
+			array.put(jsonObj);
 		}
-		// Send response back to client
-		out.flush();
-		out.close();
+		RpcHelper.writeJsonArray(response, array);
 	}
 
 	/**
@@ -48,7 +50,25 @@ public class LoadWeatherData extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		doGet(request, response);
+		try {			
+			if (request.getParameter("secret_key").equals(secret_key)) {
+				JSONArray array = new JSONArray();
+				WeatherAPI test = new WeatherAPI();
+				WeatherItem[] weatherItems = test.getWeatherItems();
+				for (WeatherItem item : weatherItems) {
+					JSONObject jsonObj = item.toJSONObject();
+					array.put(jsonObj);
+				}
+				RpcHelper.writeJsonArray(response, array);
+			}else {
+				JSONObject obj = new JSONObject();
+				obj.put("result", "error secret key");
+				RpcHelper.writeJsonObject(response, obj);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 }
