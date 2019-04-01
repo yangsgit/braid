@@ -26,8 +26,8 @@ public class WeatherItem {
 	public JSONObject toJSONObject() {
 		JSONObject obj = new JSONObject();
 		try {
-			obj.put("cloud", "Broken: "+ this.cloudBroken + " " + "Overcast: "+ this.cloudOvercast);
-			obj.put("wind", "Direction: " + this.windDirection +" " + "speed: " + this.windSpeed);
+			obj.put("cloud", "Broken: "+ this.cloudBroken + "Overcast: "+ this.cloudOvercast);
+			obj.put("wind", "Direction: " + this.windDirection + "speed: " + this.windSpeed);
 			obj.put("visibility", this.visibility);
 			obj.put("temperature", this.temperature);
 		} catch (JSONException e) {

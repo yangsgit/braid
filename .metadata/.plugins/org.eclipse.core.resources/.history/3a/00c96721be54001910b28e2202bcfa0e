@@ -105,24 +105,15 @@ public class WeatherAPI {
 				String windSpeed = (String) windSpeedObj.get("value").toString()+"kt";
 				
 				JSONArray cloudList = (JSONArray)weather.get("clouds");
-				String cloudBroken = "null";
-				String cloudOvercast = "null";
 				if (cloudList == null || cloudList.length() == 0) {
 					cloudBroken = "null";
 					cloudOvercast = "null";
 				}else{
-					for (int j = 0; j < cloudList.length();j++) {
-						JSONObject cloud = (JSONObject) cloudList.get(j);
-						String type = (String) cloud.get("type");
-						if (type.equals("OVC")) {
-							cloudOvercast = type;
-						}else if (type.equals("BRO")) {
-							cloudBroken = type;
-						}
-					}
+					cloudBroken = (JSONObject) cloudList.get(0);
+					cloudOvercast = (String) cloudList.get(1).toString();
 				}
 				
-				WeatherItem item = new WeatherItem(stations[i], cloudBroken, cloudOvercast, windSpeed, windDirection, visibility, temperature);
+				WeatherItem item = new WeatherItem(stations[i],cloudBroken, cloudOvercast, windSpeed, windDirection, visibility, temperature);
 				weatherItems[i] = item;
 			}
 			return weatherItems;

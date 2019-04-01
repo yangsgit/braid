@@ -112,7 +112,7 @@ public class WeatherAPI {
 					cloudOvercast = "null";
 				}else{
 					for (int j = 0; j < cloudList.length();j++) {
-						JSONObject cloud = (JSONObject) cloudList.get(j);
+						JSONObject cloud = (JSONObject) cloudList.get(i);
 						String type = (String) cloud.get("type");
 						if (type.equals("OVC")) {
 							cloudOvercast = type;
