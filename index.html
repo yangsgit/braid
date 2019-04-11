@@ -74,6 +74,10 @@
         var cloudCell = document.createElement("td");
         cloudCell.innerHTML = r.cloud;
         row.appendChild(cloudCell);
+        
+        var windCell = document.createElement("td");
+        windCell.innerHTML = r.wind;
+        row.appendChild(windCell);
 
         var visibilityCell = document.createElement("td");
         visibilityCell.innerHTML = r.visibility;
@@ -83,9 +87,6 @@
         temperatureCell.innerHTML = r.temperature;
         row.appendChild(temperatureCell);
 
-        var windCell = document.createElement("td");
-        windCell.innerHTML = r.wind;
-        row.appendChild(windCell);
 
         return row;
     }
