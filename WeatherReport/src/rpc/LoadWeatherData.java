@@ -65,7 +65,6 @@ public class LoadWeatherData extends HttpServlet {
 				obj.put("result", "error secret key");
 				RpcHelper.writeJsonObject(response, obj);
 			}
-			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

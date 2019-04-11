@@ -1,0 +1,155 @@
+package external;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+
+public class WeatherAPI {
+	private static final String API_HOST = "http://wx.wearebraid.com";
+	private static final String PATH_STATION = "/stations";
+	private static final String API_KEY = "your_secret_key";
+	
+	// query jsonArray from braid 
+	private JSONArray queryJSONArray(String url) {
+		try {
+			// Open a HTTP connection between Java application and braid url
+			HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+			// Set requrest method to GET
+			connection.setRequestMethod("GET");
+			// response body is saved in InputStream of connection.
+			int responseCode = connection.getResponseCode();
+			System.out.println("\nSending 'GET' request to URL : "+ url);
+			System.out.println("Response Code : " + responseCode);
+			//read response body to get events data
+			BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+			String inputLine;
+			StringBuilder response = new StringBuilder();
+			while ((inputLine = in.readLine()) != null) {
+				response.append(inputLine);
+			}
+			in.close();
+			JSONArray jsonArray = new JSONArray(response.toString());
+					return jsonArray;
+			} catch (Exception e) {
+					e.printStackTrace();
+			}
+		return null;
+	}	
+	
+	private JSONObject queryJSONObject(String url) {
+		try {
+			// Open a HTTP connection between Java application and braid url
+			HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+			// Set requrest method to GET
+			connection.setRequestMethod("GET");
+			// response body is saved in InputStream of connection.
+			int responseCode = connection.getResponseCode();
+			System.out.println("\nSending 'GET' request to URL : "+ url);
+			System.out.println("Response Code : " + responseCode);
+			//read response body to get events data
+			BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+			String inputLine;
+			StringBuilder response = new StringBuilder();
+			while ((inputLine = in.readLine()) != null) {
+				response.append(inputLine);
+			}
+			in.close();
+			JSONObject jsonObj = new JSONObject(response.toString());
+				return jsonObj;
+			} catch (Exception e) {
+				e.printStackTrace();
+		   }
+		return null;
+	}	
+	
+	
+	
+	
+	// call queryJsonArray method to get stations
+	// each station contains stateId , city and state,
+	// each of them is sperated by space
+	public String[] getStations() {
+		String url = API_HOST + PATH_STATION;
+		JSONArray jsonArray = queryJSONArray(url);
+		try {
+			String[] stations = new String[jsonArray.length()];
+		    for (int i = 0; i < jsonArray.length(); i++) {
+		        JSONObject station = jsonArray.getJSONObject(i);
+		        String stateId = (String) station.get("Station");
+		        String city = (String) station.get("City");
+		        String state = (String) station.get("State");
+		        stations[i] = stateId + "," + city + "," + state;
+		    }
+		    return stations;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+
+	public WeatherItem[] getWeatherItems() {
+		// get stations 
+		String[] stations = getStations();
+		try {
+			WeatherItem[] weatherItems = new WeatherItem[stations.length];
+			for (int i = 0; i < stations.length; i++) {
+				String[] stationArray = stations[i].split(",");
+				String url = API_HOST + PATH_STATION + "/" + stationArray[0];
+				JSONObject weather = queryJSONObject(url);
+				
+				JSONObject tempObj = (JSONObject) weather.get("temperature");
+				String temperature = (String)tempObj.get("value").toString()+"C";
+				
+				JSONObject visibObj = (JSONObject) weather.get("visibility");
+				String visibility = (String) visibObj.get("value").toString()+"sm";
+				
+	
+				JSONObject windDirObj = (JSONObject) weather.get("wind_direction");
+				String windDirection = (String) windDirObj.get("value").toString();
+			
+				JSONObject windSpeedObj = (JSONObject) weather.get("wind_speed");
+				String windSpeed = (String) windSpeedObj.get("value").toString()+"kt";
+				
+				JSONArray cloudList = (JSONArray)weather.get("clouds");
+				String cloudBroken = "null";
+				String cloudOvercast = "null";
+				if (cloudList == null || cloudList.length() == 0) {
+					cloudBroken = "null";
+					cloudOvercast = "null";
+				}else{
+					for (int j = 0; j < cloudList.length();j++) {
+						JSONObject cloud = (JSONObject) cloudList.get(j);
+						String type = (String) cloud.get("type");
+						if (type.equals("OVC")) {
+							cloudOvercast = (String)cloud.get("repr");
+						}else if (type.equals("BKN")) {
+							cloudBroken = (String)cloud.get("repr");
+						}
+					}
+				}
+				
+				WeatherItem item = new WeatherItem(stationArray[0], stationArray[1], stationArray[2] , cloudBroken, cloudOvercast, windSpeed, windDirection, visibility, temperature);
+				weatherItems[i] = item;
+			}
+			return weatherItems;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	
+	public static void main(String[] args) {
+		WeatherAPI test = new WeatherAPI();
+		WeatherItem[] weatherItems = test.getWeatherItems();
+		for (WeatherItem item : weatherItems) {
+			JSONObject jsonObj = item.toJSONObject();
+			System.out.println(jsonObj.toString());
+		}
+	}
+}

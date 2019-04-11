@@ -25,18 +25,18 @@ public class WeatherAPI {
 			System.out.println("\nSending 'GET' request to URL : "+ url);
 			System.out.println("Response Code : " + responseCode);
 			//read response body to get events data
-						BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-						String inputLine;
-						StringBuilder response = new StringBuilder();
-						while ((inputLine = in.readLine()) != null) {
-							response.append(inputLine);
-						}
-						in.close();
-						JSONArray jsonArray = new JSONArray(response.toString());
-						return jsonArray;
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
+			BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+			String inputLine;
+			StringBuilder response = new StringBuilder();
+			while ((inputLine = in.readLine()) != null) {
+				response.append(inputLine);
+			}
+			in.close();
+			JSONArray jsonArray = new JSONArray(response.toString());
+					return jsonArray;
+			} catch (Exception e) {
+					e.printStackTrace();
+			}
 		return null;
 	}	
 	
@@ -51,21 +51,27 @@ public class WeatherAPI {
 			System.out.println("\nSending 'GET' request to URL : "+ url);
 			System.out.println("Response Code : " + responseCode);
 			//read response body to get events data
-						BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-						String inputLine;
-						StringBuilder response = new StringBuilder();
-						while ((inputLine = in.readLine()) != null) {
-							response.append(inputLine);
-						}
-						in.close();
-						JSONObject jsonObj = new JSONObject(response.toString());
-						return jsonObj;
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
+			BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+			String inputLine;
+			StringBuilder response = new StringBuilder();
+			while ((inputLine = in.readLine()) != null) {
+				response.append(inputLine);
+			}
+			in.close();
+			JSONObject jsonObj = new JSONObject(response.toString());
+				return jsonObj;
+			} catch (Exception e) {
+				e.printStackTrace();
+		   }
 		return null;
 	}	
 	
+	
+	
+	
+	// call queryJsonArray method to get stations
+	// each station contains stateId , city and state,
+	// each of them is sperated by space
 	public String[] getStations() {
 		String url = API_HOST + PATH_STATION;
 		JSONArray jsonArray = queryJSONArray(url);
@@ -76,7 +82,7 @@ public class WeatherAPI {
 		        String stateId = (String) station.get("Station");
 		        String city = (String) station.get("City");
 		        String state = (String) station.get("State");
-		        stations[i] = stateId + " " + city + " " + state;
+		        stations[i] = stateId + "," + city + "," + state;
 		    }
 		    return stations;
 		} catch (Exception e) {
@@ -84,13 +90,15 @@ public class WeatherAPI {
 		}
 		return null;
 	}
-	
+
+
 	public WeatherItem[] getWeatherItems() {
+		// get stations 
 		String[] stations = getStations();
 		try {
 			WeatherItem[] weatherItems = new WeatherItem[stations.length];
 			for (int i = 0; i < stations.length; i++) {
-				String[] stationArray = stations[i].split(" ");
+				String[] stationArray = stations[i].split(",");
 				String url = API_HOST + PATH_STATION + "/" + stationArray[0];
 				JSONObject weather = queryJSONObject(url);
 				
@@ -118,9 +126,9 @@ public class WeatherAPI {
 						JSONObject cloud = (JSONObject) cloudList.get(j);
 						String type = (String) cloud.get("type");
 						if (type.equals("OVC")) {
-							cloudOvercast = type;
-						}else if (type.equals("BRO")) {
-							cloudBroken = type;
+							cloudOvercast = (String)cloud.get("altitude");
+						}else if (type.equals("BKN")) {
+							cloudBroken = (String)cloud.get("altitude");
 						}
 					}
 				}
