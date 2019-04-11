@@ -118,9 +118,9 @@ public class WeatherAPI {
 						JSONObject cloud = (JSONObject) cloudList.get(j);
 						String type = (String) cloud.get("type");
 						if (type.equals("OVC")) {
-							cloudOvercast = type;
-						}else if (type.equals("BRO")) {
-							cloudBroken = type;
+							cloudOvercast = (String)cloud.get("repr");
+						}else if (type.equals("BKN")) {
+							cloudBroken = (String)cloud.get("repr");
 						}
 					}
 				}
